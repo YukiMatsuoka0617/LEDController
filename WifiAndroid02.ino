@@ -1,8 +1,7 @@
 #include <iostream>
 #include <WiFi.h>
  
-const char* ssid = ""; 
-const char* password = ""; 
+
 
 // ウェブサーバーをポート80で開始
 WiFiServer server(80);
@@ -28,12 +27,12 @@ void setup() {
   // put your setup code here, to run once:
   setupWIFI();
   setupLED();
+  runLED();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   runWIFI();
-  runLED();
 }
 
 void setupWIFI(){
@@ -68,86 +67,86 @@ void runWIFI(){
   if (client) {
     Serial.println("new client");
     String currentLine = "";
-    String tmp1 = "";
-    String tmp2 = "";
-    int count = 0;
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();
         Serial.write(c);
-        currentLine += c;
-        if(currentLine.length() == 1){
-          tmp1 += c;
-          }
-        if(currentLine.length() == 3){
-          tmp2 += c;
-          Serial.println(tmp1);
-          Serial.println(tmp2);
+        if(c != '\n'){
+          currentLine += c;
+        }
+        Serial.print("currentLine:");
+        Serial.println(currentLine);
+       
           if(currentLine == "RED"){
             Serial.println("REDBUTTON");
-            red = 255;
+            red = 128;
             green = 0;
             blue = 0;
-            String tmp1 = "";
-            String tmp2 = "";
+            currentLine = "";
+            runLED();
             delay(100);
-            break;
+//            break;
             }
           else if(currentLine == "GRN"){
             Serial.println("GRNBUTTON");
             red = 0;
-            green = 255;
+            green = 128;
             blue = 0;
-            String tmp1 = "";
-            String tmp2 = "";
+            currentLine = "";
+            runLED();
             delay(100);
-            break;
+//            break;
             }
            else if(currentLine == "BLU"){
             Serial.println("BLUBUTTON");
             red = 0;
             green = 0;
-            blue = 255;
-            String tmp1 = "";
-            String tmp2 = "";
+            blue = 128;
+            currentLine = "";
+            runLED();
             delay(100);
-            break;
-          }
-          else if(tmp1 == "R"){
-            red = 25*atoi(tmp2.c_str());
-            Serial.println(red);
-            String tmp1 = "";
-            String tmp2 = "";
-            delay(100);
-            break;
+//            break;
             }
-          else if(tmp1 == "G"){
-            green = 25*atoi(tmp2.c_str());
-            Serial.println(green);
-            String tmp1 = "";
-            String tmp2 = "";
-            delay(100);
-            break;
+          else if(c == '\n'){
             }
-          else if(tmp1 == "B"){
-            blue = 25*atoi(tmp2.c_str());
-            Serial.println(blue);
-            String tmp1 = "";
-            String tmp2 = "";
-            delay(100);
-            break;
-            }
-          if(currentLine.length() > 3){
-            String tmp1 = "";
-            String tmp2 = "";
-            delay(100);
-            break;
-            }
-          }
+//          else if(tmp1 == "R"){
+//            red = 25*atoi(tmp2.c_str());
+//            Serial.println(red);
+//            String tmp1 = "";
+//            String tmp2 = "";
+//            delay(100);
+////            break;
+//            }
+//          else if(tmp1 == "G"){
+//            green = 25*atoi(tmp2.c_str());
+//            Serial.println(green);
+//            String tmp1 = "";
+//            String tmp2 = "";
+//            delay(100);
+//            break;
+//            }
+//          else if(tmp1 == "B"){
+//            blue = 25*atoi(tmp2.c_str());
+//            Serial.println(blue);
+//            String tmp1 = "";
+//            String tmp2 = "";
+//            delay(100);
+//            break;
+//            }
+//          if(currentLine.length() > 3){
+//            String tmp1 = "";
+//            String tmp2 = "";
+//            delay(100);
+//            break;
+//            }
+//          }
       }
     }
-    client.stop();
+    Serial.println("while(client.connect) end");
+//    client.stop();
+//    Serial.println("Dis Connect");
   }
+  Serial.println("if(client) end");
 }
 
 void setupLED(){
